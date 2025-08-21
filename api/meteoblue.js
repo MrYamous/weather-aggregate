@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 export default async function handler(request, response) {
   const meteoblueApiKey = process.env.METEOBLUE_API_KEY;
 
+  console.log(meteoblueApiKey);
+
   const lat = request.query.lat || '45.57';
   const lon = request.query.lon || '6.15';
 

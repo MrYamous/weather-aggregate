@@ -2,10 +2,12 @@ async function getMeteoData() {
   const lat = 45.57;
   const lon = 6.15;
 
-  const url = `/api/meteo?lat=${lat}&lon=${lon}`;
+  const url = `/api/meteoblue?lat=${lat}&lon=${lon}`;
 
   try {
     const response = await fetch(url);
+
+    console.log(response);
 
     if (!response.ok) {
       throw new Error(`Erreur de l'API Vercel : ${response.status}`);
@@ -23,17 +25,24 @@ async function getMeteoData() {
 
 function displayMeteo(data) {
   const displayContainer = document.getElementById('meteo-display');
-  if (!displayContainer || !data || !data.daily || !data.daily.time) {
+  if (!displayContainer) {
+    console.error("Conteneur HTML manquant.");
+    return;
+  }
+
+  if (!data || !data.data_day) {
+    console.log(data);
+    console.log(data.data_day);
     console.error("Données météo invalides ou conteneur HTML manquant.");
     return;
   }
 
   let htmlContent = '';
   for (let i = 0; i < 3; i++) {
-    const date = new Date(data.daily.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
-    const tempMax = data.daily.temperature_max[i];
-    const tempMin = data.daily.temperature_min[i];
-    const precipitation = data.daily.precipitation_sum[i];
+    const date = new Date(data.data_day.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    const tempMax = data.data_day.temperature_max[i];
+    const tempMin = data.data_day.temperature_min[i];
+    const precipitation = data.data_day.convective_precipitation[i];
 
     htmlContent += `
       <div class="meteo-card">
