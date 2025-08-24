@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Météo journée</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="daily.js" defer></script>
+</head>
+<body class="bg-gray-100 font-sans p-8">
+
+    <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">
+            Météo
+        </h1>
+
+        <div id="meteo-display" class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center text-gray-500">
+                <p>Chargement des prévisions...</p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
