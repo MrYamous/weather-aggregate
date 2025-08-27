@@ -67,13 +67,11 @@ function displayMeteo(meteoblueData, aromeData, gfsData) {
     const precipitationMeteoblue = meteoblueData.data_day.convective_precipitation[i];
     const windMeteoblue = meteoblueData.data_day.windspeed_mean[i];
 
-    const dateArome = new Date(aromeData.daily.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempMinArome = aromeData.daily.temperature_2m_min[i];
     const tempMaxArome = aromeData.daily.temperature_2m_max[i];
     const precipitationArome = aromeData.daily.precipitation_sum[i];
     const windMaxArome = aromeData.daily.wind_speed_10m_max[i];
 
-    const dateGfs = new Date(gfsData.daily.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempMinGfs = gfsData.daily.temperature_2m_min[i];
     const tempMaxGfs = gfsData.daily.temperature_2m_max[i];
     const precipitationGfs = gfsData.daily.precipitation_sum[i];
@@ -83,19 +81,16 @@ function displayMeteo(meteoblueData, aromeData, gfsData) {
       <tr>
         <td>${dateMeteoblue}</td>
         <td>
-          <p>Date : ${dateMeteoblue}</p>
           <p>Température : Min : ${tempMinMeteoblue}°C | Max : ${tempMaxMeteoblue}°C</p>
           <p>Précipitations : ${precipitationMeteoblue} mm</p>
           <p>Vent : ${windMeteoblue} km/h</p>
         </td>
         <td>
-          <p>Date : ${dateArome}</p>
           <p>Température : Min : ${tempMinArome}°C | Max : ${tempMaxArome}°C</p>
           <p>Précipitations : ${precipitationArome} mm</p>
           <p>Vent maximum : ${windMaxArome} km/h</p>
         </td>
         <td>
-          <p>Date : ${dateGfs}</p>
           <p>Température : Min : ${tempMinGfs}°C | Max : ${tempMaxGfs}°C</p>
           <p>Précipitations : ${precipitationGfs} mm</p>
           <p>Vent maximum : ${windMaxGfs} km/h</p>

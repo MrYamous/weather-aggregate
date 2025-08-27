@@ -1,3 +1,7 @@
 .meteo-table tr {
   border-bottom: 1px solid #ddd;
 }
+
+td::first-letter {
+    text-transform: capitalize;
+}

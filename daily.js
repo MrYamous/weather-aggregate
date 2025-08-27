@@ -69,7 +69,6 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
   `;
 
   for (let i = 0; i < 24; i++) {
-    const dateYr = new Date(yrData.properties.timeseries[i].time).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempYr = yrData.properties.timeseries[i].data.instant.details.air_temperature;
     const precipitationYr = yrData.properties.timeseries[i].data.next_1_hours.details.precipitation_amount;
     const windYr = yrData.properties.timeseries[i].data.instant.details.wind_speed;
@@ -79,39 +78,33 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
     const precipitationMeteoblue = meteoblueData.data_1h.precipitation[i];
     const windMeteoblue = meteoblueData.data_1h.windspeed[i];
 
-    const dateArome = new Date(aromeData.hourly.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempArome = aromeData.hourly.temperature_2m[i];
     const precipitationArome = aromeData.hourly.precipitation[i];
     const windArome = aromeData.hourly.wind_speed_10m[i];
 
-    const dateGfs = new Date(gfsData.hourly.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempGfs = gfsData.hourly.temperature_2m[i];
     const precipitationGfs = gfsData.hourly.precipitation[i];
     const windGfs = gfsData.hourly.wind_speed_10m[i];
 
     htmlContent += `
       <tr>
-        <td>${dateYr}</td>
+        <td>${dateMeteoblue}</td>
         <td>
-          <p>Date : ${dateYr}</p>
           <p>Température : ${tempYr}°C</p>
           <p>Précipitations : ${precipitationYr} mm</p>
           <p>Vent : ${windYr} km/h</p>
         </td>
         <td>
-          <p>Date : ${dateMeteoblue}</p>
           <p>Température : ${tempMeteoblue}°C</p>
           <p>Précipitations : ${precipitationMeteoblue} mm</p>
           <p>Vent : ${windMeteoblue} km/h</p>
         </td>
         <td>
-          <p>Date : ${dateArome}</p>
           <p>Température : ${tempArome}°C</p>
           <p>Précipitations : ${precipitationArome} mm</p>
           <p>Vent : ${windArome} km/h</p>
         </td>
         <td>
-          <p>Date : ${dateGfs}</p>
           <p>Température : ${tempGfs}°C</p>
           <p>Précipitations : ${precipitationGfs} mm</p>
           <p>Vent : ${windGfs} km/h</p>
