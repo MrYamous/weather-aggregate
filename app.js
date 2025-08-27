@@ -3,25 +3,31 @@ async function getMeteoData() {
   const lon = 6.15;
 
   const meteoblueUrl = `/api/meteoblue?lat=${lat}&lon=${lon}`;
+  const aromeUrl = `/api/arome?lat=${lat}&lon=${lon}`;
   const gfsUrl = `/api/gfs?lat=${lat}&lon=${lon}`;
 
   try {
-    const [meteoblueResponse, gfsResponse] = await Promise.all([
+    const [meteoblueResponse, aromeResponse, gfsResponse] = await Promise.all([
       fetch(meteoblueUrl),
+      fetch(aromeUrl),
       fetch(gfsUrl)
     ]);
 
     if (!meteoblueResponse.ok) {
       throw new Error(`Erreur de l'API Meteoblue : ${meteoblueResponse.status}`);
     }
+    if (!aromeResponse.ok) {
+      throw new Error(`Erreur de l'API Arome : ${yrResponse.status}`);
+    }
     if (!gfsResponse.ok) {
       throw new Error(`Erreur de l'API GFS : ${gfsResponse.status}`);
     }
 
     const meteoblueData = await meteoblueResponse.json();
+    const aromeData = await aromeResponse.json()
     const gfsData = await gfsResponse.json();
 
-    displayMeteo(meteoblueData, gfsData);
+    displayMeteo(meteoblueData, aromeData, gfsData);
 
   } catch (error) {
     console.error('Echec de la récupération des données météo :', error);
@@ -29,14 +35,14 @@ async function getMeteoData() {
   }
 }
 
-function displayMeteo(meteoblueData, gfsData) {
+function displayMeteo(meteoblueData, aromeData, gfsData) {
   const displayContainer = document.getElementById('meteo-display');
   if (!displayContainer) {
     console.error("Conteneur HTML manquant.");
     return;
   }
 
-  if (!meteoblueData || !meteoblueData.data_day || !gfsData) {
+  if (!meteoblueData || !meteoblueData.data_day || !aromeData || !gfsData) {
     console.error("Données météo invalides ou conteneur HTML manquant.");
     return;
   }
@@ -47,6 +53,7 @@ function displayMeteo(meteoblueData, gfsData) {
         <tr>
           <th>Date/Heure</th>
           <th>Meteoblue</th>
+          <th>Arome</th>
           <th>GFS</th>
         </tr>
       </thead>
@@ -59,6 +66,12 @@ function displayMeteo(meteoblueData, gfsData) {
     const tempMinMeteoblue = meteoblueData.data_day.temperature_min[i];
     const precipitationMeteoblue = meteoblueData.data_day.convective_precipitation[i];
     const windMeteoblue = meteoblueData.data_day.windspeed_mean[i];
+
+    const dateArome = new Date(aromeData.daily.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    const tempMinArome = aromeData.daily.temperature_2m_min[i];
+    const tempMaxArome = aromeData.daily.temperature_2m_max[i];
+    const precipitationArome = aromeData.daily.precipitation_sum[i];
+    const windMaxArome = aromeData.daily.wind_speed_10m_max[i];
 
     const dateGfs = new Date(gfsData.daily.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
     const tempMinGfs = gfsData.daily.temperature_2m_min[i];
@@ -74,6 +87,12 @@ function displayMeteo(meteoblueData, gfsData) {
           <p>Température : Min : ${tempMinMeteoblue}°C | Max : ${tempMaxMeteoblue}°C</p>
           <p>Précipitations : ${precipitationMeteoblue} mm</p>
           <p>Vent : ${windMeteoblue} km/h</p>
+        </td>
+        <td>
+          <p>Date : ${dateArome}</p>
+          <p>Température : Min : ${tempMinArome}°C | Max : ${tempMaxArome}°C</p>
+          <p>Précipitations : ${precipitationArome} mm</p>
+          <p>Vent maximum : ${windMaxArome} km/h</p>
         </td>
         <td>
           <p>Date : ${dateGfs}</p>
