@@ -75,8 +75,7 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
     const windYr = yrData.properties.timeseries[i].data.instant.details.wind_speed;
 
     const dateMeteoblue = new Date(meteoblueData.data_1h.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-    const tempMaxMeteoblue = meteoblueData.data_1h.temperature[i];
-    const tempMinMeteoblue = meteoblueData.data_1h.temperature[i];
+    const tempMeteoblue = meteoblueData.data_1h.temperature[i];
     const precipitationMeteoblue = meteoblueData.data_1h.precipitation[i];
     const windMeteoblue = meteoblueData.data_1h.windspeed[i];
 
@@ -101,7 +100,7 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
         </td>
         <td>
           <p>Date : ${dateMeteoblue}</p>
-          <p>Température : Min: ${tempMinMeteoblue}°C | Max: ${tempMaxMeteoblue}°C</p>
+          <p>Température : ${tempMeteoblue}°C</p>
           <p>Précipitations : ${precipitationMeteoblue} mm</p>
           <p>Vent : ${windMeteoblue} km/h</p>
         </td>
