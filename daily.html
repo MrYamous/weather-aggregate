@@ -16,8 +16,20 @@
     <div class="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6">
         
         <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center">
-            Météo
+            Météo heure par heure
         </h1>
+
+        <div class="flex justify-center items-center mb-4">
+            <button id="prev-day" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Précédent
+            </button>
+            <h2 id="selected-day" class="text-xl font-semibold text-gray-700 mx-4">
+                Aujourd'hui
+            </h2>
+            <button id="next-day" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Suivant
+            </button>
+        </div>
 
         <div id="meteo-display" class="grid gap-6">
             <div class="col-span-full text-center text-gray-500">

@@ -1,3 +1,5 @@
+let selectedDay = 0;
+
 async function getMeteoData() {
   const lat = 45.57;
   const lon = 6.15;
@@ -44,6 +46,12 @@ async function getMeteoData() {
 
 function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
   const displayContainer = document.getElementById('meteo-display');
+  const selectedDate = new Date();
+  selectedDate.setDate(selectedDate.getDate() + selectedDay);
+
+  const dayStart = new Date(selectedDate);
+  dayStart.setHours(0, 0, 0, 0);
+
   if (!displayContainer) {
     console.error("Conteneur HTML manquant.");
     return;
@@ -68,27 +76,32 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
       <tbody>
   `;
 
-  for (let i = 0; i < 24; i++) {
-    const tempYr = yrData.properties.timeseries[i].data.instant.details.air_temperature;
-    const precipitationYr = yrData.properties.timeseries[i].data.next_1_hours.details.precipitation_amount;
-    const windYr = yrData.properties.timeseries[i].data.instant.details.wind_speed;
+  const startIndex = selectedDay * 24;
+  const endIndex = startIndex + 24;
 
-    const dateMeteoblue = new Date(meteoblueData.data_1h.time[i]).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-    const tempMeteoblue = meteoblueData.data_1h.temperature[i];
-    const precipitationMeteoblue = meteoblueData.data_1h.precipitation[i];
-    const windMeteoblue = meteoblueData.data_1h.windspeed[i];
+  for (let i = startIndex; i < endIndex; i++) {
+    const hour = new Date(dayStart);
+    hour.setHours(hour.getHours() + i);
 
-    const tempArome = aromeData.hourly.temperature_2m[i];
-    const precipitationArome = aromeData.hourly.precipitation[i];
-    const windArome = aromeData.hourly.wind_speed_10m[i];
+    const tempYr = yrData.properties.timeseries[i]?.data.instant.details.air_temperature ?? '-';
+    const precipitationYr = yrData.properties.timeseries[i]?.data?.next_1_hours?.details?.precipitation_amount ?? '-';
+    const windYr = yrData.properties.timeseries[i]?.data.instant.details.wind_speed ?? '-';
 
-    const tempGfs = gfsData.hourly.temperature_2m[i];
-    const precipitationGfs = gfsData.hourly.precipitation[i];
-    const windGfs = gfsData.hourly.wind_speed_10m[i];
+    const tempMeteoblue = meteoblueData.data_1h.temperature[i] ?? '-';
+    const precipitationMeteoblue = meteoblueData.data_1h.precipitation[i] ?? '-';
+    const windMeteoblue = meteoblueData.data_1h.windspeed[i] ?? '-';
+
+    const tempArome = aromeData.hourly.temperature_2m[i] ?? '-';
+    const precipitationArome = aromeData.hourly.precipitation[i] ?? '-';
+    const windArome = aromeData.hourly.wind_speed_10m[i] ?? '-';
+
+    const tempGfs = gfsData.hourly.temperature_2m[i] ?? '-';
+    const precipitationGfs = gfsData.hourly.precipitation[i] ?? '-';
+    const windGfs = gfsData.hourly.wind_speed_10m[i] ?? '-';
 
     htmlContent += `
       <tr>
-        <td>${dateMeteoblue}</td>
+        <td>${hour.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
         <td>
           <p>Température : ${tempYr}°C</p>
           <p>Précipitations : ${precipitationYr} mm</p>
@@ -114,6 +127,21 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
   }
 
   displayContainer.innerHTML = htmlContent;
+
+  const dayNames = ['Aujourd\'hui', 'Demain', 'J+2', 'J+3', 'J+4'];
+  document.getElementById('selected-day').textContent = dayNames[selectedDay] || `J+${selectedDay}`;
 }
+
+document.getElementById('prev-day').addEventListener('click', () => {
+  if (selectedDay > 0) {
+    selectedDay--;
+    getMeteoData();
+  }
+});
+
+document.getElementById('next-day').addEventListener('click', () => {
+  selectedDay++;
+  getMeteoData();
+});
 
 getMeteoData();
