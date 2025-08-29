@@ -62,6 +62,11 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
     return;
   }
 
+  const parisOffset = new Date().getTimezoneOffset() / -60;
+  const utcHour = new Date().getUTCHours();
+  const parisHour = (utcHour + parisOffset + 24) % 24;
+  const offset = parisHour;
+
   let htmlContent = `
     <table class="meteo-table">
       <thead>
@@ -83,9 +88,16 @@ function displayMeteo(meteoblueData, yrData, aromeData, gfsData) {
     const hour = new Date(dayStart);
     hour.setHours(hour.getHours() + i);
 
-    const tempYr = yrData.properties.timeseries[i]?.data.instant.details.air_temperature ?? '-';
-    const precipitationYr = yrData.properties.timeseries[i]?.data?.next_1_hours?.details?.precipitation_amount ?? '-';
-    const windYr = yrData.properties.timeseries[i]?.data.instant.details.wind_speed ?? '-';
+    const yrIndex = i - offset;
+    const tempYr = yrIndex >= 0 && yrIndex < yrData.properties.timeseries.length
+      ? yrData.properties.timeseries[yrIndex]?.data.instant.details.air_temperature ?? '-'
+      : '-';
+    const precipitationYr = yrIndex >= 0 && yrIndex < yrData.properties.timeseries.length
+      ? yrData.properties.timeseries[yrIndex]?.data?.next_1_hours?.details?.precipitation_amount ?? '-'
+      : '-';
+    const windYr = yrIndex >= 0 && yrIndex < yrData.properties.timeseries.length
+      ? yrData.properties.timeseries[yrIndex]?.data.instant.details.wind_speed ?? '-'
+      : '-';
 
     const tempMeteoblue = meteoblueData.data_1h.temperature[i] ?? '-';
     const precipitationMeteoblue = meteoblueData.data_1h.precipitation[i] ?? '-';
